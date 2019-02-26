@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="et" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mobile-ID</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <strong>Mobile-ID Demo</strong>
+            </a>
+            <a href="https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO" target="_blank" class="navbar-brand d-flex align-items-center">
+                <strong>Test numbers</strong>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="custom-switch">
+    <h1 class="h1-padding text-center">MOBILE-ID</h1>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="authentication">Authenticate</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="signature">Sign a document</a>
+        </li>
+    </ul>
+</div>
+
+<div class="forms">
+    <form method="POST" action="backend/app/authentication-request" class="form-action" id="authenticationForm">
+        <div class="form-group">
+            <label for="inputPhone">Phone number (+37XXXXXXXX)</label>
+            <input type="text" class="form-control" id="inputPhone" name="phoneNumber">
+            //TODO
+            <!--<div *ngIf="userRequest.phoneNumber." style="color:red">-->
+            <!--inputPhone Error </div>-->
+        </div>
+        <div class="form-group">
+            <label for="inputIdentityNumber">National identity number</label>
+            <input type="text" class="form-control" id="inputIdentityNumber" name="nationalIdentityNumber">
+            //TODO
+            <!--<div th:if="${#fields.hasErrors('nationalIdentityNumber')}" th:errors="*{nationalIdentityNumber}" style="color:red">-->
+            <!--nationalIdentityNumber Error </div>-->
+        </div>
+        <button type="submit" class="btn btn-primary float-right">Authenticate</button>
+    </form>
+
+    <!--<form method="POST" th:action="@{/signatureRequest}" th:object="${userRequest}" enctype="multipart/form-data" class="form-action" id="signatureForm">-->
+    <!--<div class="form-group">-->
+    <!--<label for="inputSignPhone">Phone number (+37XXXXXXXX)</label>-->
+    <!--<input type="text" th:field="*{phoneNumber}" class="form-control" id="inputSignPhone">-->
+    <!--<div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red">-->
+    <!--phoneNumber Error </div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+    <!--<label for="inputSignIdentityNumber">National identity number</label>-->
+    <!--<input type="text" th:field="*{nationalIdentityNumber}" class="form-control" id="inputSignIdentityNumber">-->
+    <!--<div th:if="${#fields.hasErrors('nationalIdentityNumber')}" th:errors="*{nationalIdentityNumber}" style="color:red">-->
+    <!--nationalIdentityNumber Error </div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+    <!--<label for="document">Document to sign</label>-->
+    <!--<input type="file" th:field="*{file}" class="form-control" id="document">-->
+
+    <!--<div th:if="${#fields.hasErrors('file')}" th:errors="*{file}" style="color:red">-->
+    <!--file Error </div>-->
+
+    <!--</div>-->
+    <!--<button type="submit" value="submit" class="btn btn-primary float-right">Sign</button>-->
+    <!--</form>-->
+</div>
+
+<!--<script th:src="@{/js/bootstrap.js}"></script>-->
+<!--<script type="text/javascript">-->
+<!--var authenticationTab = document.getElementById('authentication');-->
+<!--var signatureTab = document.getElementById('signature');-->
+<!--authenticationTab.addEventListener('click', showAuthentication, false);-->
+<!--signatureTab.addEventListener('click', showSigning, false);-->
+
+<!--function showAuthentication() {-->
+<!--document.getElementById('authenticationForm').style.display = 'block';-->
+<!--document.getElementById('signatureForm').style.display = 'none';-->
+<!--document.getElementById('authentication').classList.add("active");-->
+<!--document.getElementById('signature').classList.remove("active");-->
+<!--}-->
+
+<!--function showSigning() {-->
+<!--document.getElementById('authenticationForm').style.display = 'none';-->
+<!--document.getElementById('signatureForm').style.display = 'block';-->
+<!--document.getElementById('authentication').classList.remove("active");-->
+<!--document.getElementById('signature').classList.add("active");-->
+<!--}-->
+
+<!--if (window.location.href.indexOf('sign') > -1) {-->
+<!--showSigning();-->
+<!--}-->
+
+<!--</script>-->
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+[submodule "mid-rest-php-client"]
+	path = mid-rest-php-client
+	url = https://github.com/mikk125/mid-rest-php-client.git
