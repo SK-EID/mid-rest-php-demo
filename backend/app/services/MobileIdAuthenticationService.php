@@ -69,7 +69,6 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
                 $response->getSessionId(),
                 '/mid-api/authentication/session/{sessionId}'
             );
-
             $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash->getHashInBase64(), $authenticationHash->getHashType());
             $validator = new AuthenticationResponseValidator();
             $authenticationResult = $validator->validate($authentication);
