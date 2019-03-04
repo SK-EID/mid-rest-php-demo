@@ -64,12 +64,11 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
         $authenticationResult = null;
         try {
             $response = $this->client->getMobileIdConnector()->authenticate($request);
-
             $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus(
                 $response->getSessionId(),
                 '/mid-api/authentication/session/{sessionId}'
             );
-            $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash->getHashInBase64(), $authenticationHash->getHashType());
+            $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
             $validator = new AuthenticationResponseValidator();
             $authenticationResult = $validator->validate($authentication);
         } catch (Exception $e) {
