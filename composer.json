@@ -4,6 +4,8 @@
     },
   "require": {
     "ext-json": "*",
-    "ext-xdebug": "*"
+    "ext-xdebug": "*",
+    "ext-curl": "*",
+    "ext-openssl": "*"
   }
 }

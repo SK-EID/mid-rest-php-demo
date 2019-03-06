@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../../../mid-rest-php-client-vana/ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/../model/AuthenticationSessionInfo.php';
-require_once __DIR__ . '/../../../mid-rest-php-client-vana/ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../../../mid-rest-php-client-vana/ee.sk.mid/Language.php';
+require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/Language.php';
 require_once __DIR__ . '/../exception/MidAuthException.php';
 
 /**
