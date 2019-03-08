@@ -1,16 +1,18 @@
 <?php
-require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../model/AuthenticationSessionInfo.php';
-require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../../../mid-rest-php-client/ee.sk.mid/Language.php';
-require_once __DIR__ . '/../exception/MidAuthException.php';
+namespace Sk\Mid\Demo\Service;
 
-/**
- * Created by IntelliJ IDEA.
- * User: mikks
- * Date: 2/12/2019
- * Time: 1:42 PM
- */
+
+use Exception;
+use Sk\Mid\AuthenticationIdentity;
+use Sk\Mid\AuthenticationResponseValidator;
+use Sk\Mid\Demo\Exception\MidAuthException;
+use Sk\Mid\Demo\Model\AuthenticationSessionInfo;
+use Sk\Mid\Demo\Model\UserRequest;
+use Sk\Mid\Language\ENG;
+use Sk\Mid\MobileIdAuthenticationHashToSign;
+use Sk\Mid\MobileIdClient;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+
 interface MobileIdAuthenticationServiceInterface
 {
     public function startAuthentication(UserRequest $userRequest): AuthenticationSessionInfo;
@@ -56,7 +58,7 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             ->withPhoneNumber($userRequest->getPhoneNumber())
             ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
             ->withHashToSign($authenticationHash)
-            ->withLanguage(Language::ENG)
+            ->withLanguage(new ENG())
             ->withDisplayText($this->midAuthDisplayText)
             ->withDisplayTextFormat('GSM7')
             ->build();

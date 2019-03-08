@@ -1,4 +1,7 @@
 <?php
+namespace Sk\Mid\Demo\Model;
+
+use Sk\Mid\MobileIdAuthenticationHashToSign;
 
 class AuthenticationSessionInfo
 {

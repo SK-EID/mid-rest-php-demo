@@ -1,13 +1,13 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mikks
- * Date: 2/12/2019
- * Time: 5:55 PM
- */
+namespace Sk\Mid\Demo\Service;
+
+
+use Sk\Mid\Demo\Model\UserRequest;
+use Sk\Mid\MobileIdClient;
+use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 
 interface MobileIdCertificateServiceInterface {
-    public function getCertificate(UserRequest $userRequest) : X509Certificate;
+    public function getCertificate(UserRequest $userRequest) : array;
 }
 
 class MobileIdCertificateService implements MobileIdCertificateServiceInterface
@@ -15,7 +15,7 @@ class MobileIdCertificateService implements MobileIdCertificateServiceInterface
     /** @var MobileIdClient $client */
     private $client;
 
-    public function getCertificate(UserRequest $userRequest): X509Certificate
+    public function getCertificate(UserRequest $userRequest): array
     {
         $request = CertificateRequest::newBuilder()
             ->withRelyingPartyUUID($this->client->getRelyingPartyUUID())

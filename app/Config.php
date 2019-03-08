@@ -1,10 +1,7 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mikks
- * Date: 2/12/2019
- * Time: 5:26 PM
- */
+namespace Sk\Mid\Demo;
+use Sk\Mid\Demo\Model\UserMidSession;
+use Sk\Mid\MobileIdClient;
 class Config
 {
     /** @var string $midRelyingPartyUuid */

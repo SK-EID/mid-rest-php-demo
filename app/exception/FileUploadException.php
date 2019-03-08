@@ -1,10 +1,8 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mikks
- * Date: 2/12/2019
- * Time: 11:58 AM
- */
+namespace Sk\Mid\Demo\Exception;
+
+use RuntimeException;
+use Throwable;
 class FileUploadException extends RuntimeException {
     public function __construct($message = "", $code = 0, Throwable $previous = null) {
         parent::__construct($message, $code, $previous);

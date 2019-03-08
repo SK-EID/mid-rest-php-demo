@@ -1,4 +1,5 @@
 <?php
+namespace Sk\Mid\Demo\Model;
 
 class UserMidSession {
 

@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: mikks
- * Date: 2/12/2019
- * Time: 1:37 PM
- */
+namespace Sk\Mid\Demo\Model;
+
 class UserRequest
 {
     /** @var string $phoneNumber */
