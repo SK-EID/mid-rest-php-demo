@@ -1,8 +1,5 @@
 <?php
-namespace Sk\Mid\Demo\Service;
 
-
-use Sk\Mid\Demo\Model\UserRequest;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 

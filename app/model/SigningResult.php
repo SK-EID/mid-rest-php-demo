@@ -1,7 +1,4 @@
 <?php
-namespace Sk\Mid\Demo\Model;
-
-use DateTime;
 
 class SigningResult
 {

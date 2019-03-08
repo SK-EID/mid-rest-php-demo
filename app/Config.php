@@ -1,7 +1,7 @@
 <?php
-namespace Sk\Mid\Demo;
-use Sk\Mid\Demo\Model\UserMidSession;
+
 use Sk\Mid\MobileIdClient;
+
 class Config
 {
     /** @var string $midRelyingPartyUuid */
@@ -21,7 +21,6 @@ class Config
             ->withHostUrl($this->midApplicationProviderHost)
             ->build();
     }
-    // VAATA JAVA OMA BEANE, KA YLEMISEL FNIL.
     public function userSessionSigning()
     {
         return new UserMidSession();

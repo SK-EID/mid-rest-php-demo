@@ -1,13 +1,7 @@
 <?php
-namespace Sk\Mid\Demo\Service;
-
-
-use Exception;
+require_once __DIR__ . '/../model/AuthenticationSessionInfo.php';
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\Demo\Exception\MidAuthException;
-use Sk\Mid\Demo\Model\AuthenticationSessionInfo;
-use Sk\Mid\Demo\Model\UserRequest;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
@@ -41,6 +35,9 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
     public function startAuthentication(UserRequest $userRequest): AuthenticationSessionInfo
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
+        echo 'hash '.base64_decode($authenticationHash->getHashInBase64());
+        echo 'hash in hex: '.bin2hex(base64_decode($authenticationHash->getHashInBase64()));
+        echo 'code: '.$authenticationHash->calculateVerificationCode();
         return AuthenticationSessionInfo::newBuilder()
             ->withUserRequest($userRequest)
             ->withAuthenticationHash($authenticationHash)
