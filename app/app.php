@@ -1,11 +1,14 @@
 <?php
+namespace Sk\Mid\Demo;
+
+use Exception;
 use Silex\Application;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+
 $app = new Application();
-$app->register(new TwigServiceProvider(), array(
-    'twig.path' => __DIR__ . '/../views',
-));
+
 $config = array(
     'host_url'           => 'https://tsp.demo.sk.ee',
     'relying_party_uuid' => '00000000-0000-0000-0000-000000000000',
@@ -13,13 +16,16 @@ $config = array(
     'certificate_level'  => 'QUALIFIED',
 );
 $app['client.config'] = $config;
-$app['debug'] = true;
-$app->register(new Silex\Provider\SessionServiceProvider());
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
+$app->register(new TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../views',
 ));
+$app->register(new SessionServiceProvider());
+$app->error(function (Exception $e) {
+    exit($e->getMessage());
+});
 $app->before( function( Request $request )
 {
+    $request->getSession()->start();
     if ( 0 === strpos( $request->headers->get( 'Content-Type' ), 'application/json' ) )
     {
         $data = json_decode( $request->getContent(), true );

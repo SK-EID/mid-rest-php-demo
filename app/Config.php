@@ -1,18 +1,19 @@
 <?php
-
+namespace Sk\Mid\Demo;
+use Sk\Mid\Demo\Model\UserMidSession;
 use Sk\Mid\MobileIdClient;
 
 class Config
 {
     /** @var string $midRelyingPartyUuid */
     private $midRelyingPartyUuid = '00000000-0000-0000-0000-000000000000';
-
+    
     /** @var string $midRelyingPartyName */
     private $midRelyingPartyName = 'DEMO';
-
+    
     /** @var string $midApplicationProviderHost */
-    private $midApplicationProviderHost = 'https://tsp.demo.sk.ee';
-
+    private $midApplicationProviderHost = 'https://tsp.demo.sk.ee/mid-api';
+    
     public function mobileIdClient() : MobileIdClient
     {
         return MobileIdClient::newBuilder()
@@ -21,6 +22,7 @@ class Config
             ->withHostUrl($this->midApplicationProviderHost)
             ->build();
     }
+
     public function userSessionSigning()
     {
         return new UserMidSession();

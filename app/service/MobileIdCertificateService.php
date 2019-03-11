@@ -1,12 +1,13 @@
 <?php
+namespace Sk\Mid\Demo\service;
 
+use Sk\Mid\Demo\Model\UserRequest;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 
 interface MobileIdCertificateServiceInterface {
     public function getCertificate(UserRequest $userRequest) : array;
 }
-
 class MobileIdCertificateService implements MobileIdCertificateServiceInterface
 {
     /** @var MobileIdClient $client */

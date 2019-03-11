@@ -1,26 +1,23 @@
 <?php
+namespace Sk\Mid\Demo\Model;
 
 class UserRequest
 {
     /** @var string $phoneNumber */
     private $phoneNumber;
-
     /** @var string $nationalIdentityNumber */
     private $nationalIdentityNumber;
-
     /** @var \Symfony\Component\HttpFoundation\File\File $file */
     private $file;
-
     /**
      * @return string
      */
     public function getPhoneNumber(): string
     {
         return $this->phoneNumber != null &&
-                preg_match('/^\+37[0-9]{5,10}$/', $this->phoneNumber) ?
-                $this->phoneNumber : null;
+        preg_match('/^\+37[0-9]{5,10}$/', $this->phoneNumber) ?
+            $this->phoneNumber : null;
     }
-
     /**
      * @param string $phoneNumber
      */
@@ -28,17 +25,15 @@ class UserRequest
     {
         $this->phoneNumber = $phoneNumber;
     }
-
     /**
      * @return string
      */
     public function getNationalIdentityNumber(): string
     {
         return $this->nationalIdentityNumber != null &&
-                preg_match('/^[0-9]{11}/', $this->nationalIdentityNumber) ?
-                $this->nationalIdentityNumber : null;
+        preg_match('/^[0-9]{11}/', $this->nationalIdentityNumber) ?
+            $this->nationalIdentityNumber : null;
     }
-
     /**
      * @param string $nationalIdentityNumber
      */
@@ -46,7 +41,6 @@ class UserRequest
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
     }
-
     /**
      * @return \Symfony\Component\HttpFoundation\File\File
      */
@@ -54,7 +48,6 @@ class UserRequest
     {
         return $this->file;
     }
-
     /**
      * @param \Symfony\Component\HttpFoundation\File\File $file
      */
@@ -62,5 +55,4 @@ class UserRequest
     {
         $this->file = $file;
     }
-
 }

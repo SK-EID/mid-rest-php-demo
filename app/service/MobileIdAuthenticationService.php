@@ -1,7 +1,14 @@
 <?php
-require_once __DIR__ . '/../model/AuthenticationSessionInfo.php';
+
+namespace Sk\Mid\Demo\service;
+
+use Exception;
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
+use Sk\Mid\Demo\Exception\MidAuthException;
+use Sk\Mid\Demo\Model\AuthenticationSessionInfo;
+use Sk\Mid\Demo\Model\UserRequest;
+use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
@@ -16,17 +23,12 @@ interface MobileIdAuthenticationServiceInterface
 
 class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInterface
 {
-
     /** @var string $midAuthDisplayText */
     private $midAuthDisplayText = 'Log in with MID demo?';
 
     /** @var MobileIdClient $client */
     private $client;
 
-    /**
-     * MobileIdAuthenticationService constructor.
-     * @param MobileIdClient $client
-     */
     public function __construct(MobileIdClient $client)
     {
         $this->client = $client;
@@ -35,9 +37,6 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
     public function startAuthentication(UserRequest $userRequest): AuthenticationSessionInfo
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
-        echo 'hash '.base64_decode($authenticationHash->getHashInBase64());
-        echo 'hash in hex: '.bin2hex(base64_decode($authenticationHash->getHashInBase64()));
-        echo 'code: '.$authenticationHash->calculateVerificationCode();
         return AuthenticationSessionInfo::newBuilder()
             ->withUserRequest($userRequest)
             ->withAuthenticationHash($authenticationHash)
@@ -55,23 +54,24 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             ->withPhoneNumber($userRequest->getPhoneNumber())
             ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
             ->withHashToSign($authenticationHash)
-            ->withLanguage(new ENG())
+            ->withLanguage(ENG::asType())
             ->withDisplayText($this->midAuthDisplayText)
             ->withDisplayTextFormat('GSM7')
             ->build();
 
         $authenticationResult = null;
         try {
+
             $response = $this->client->getMobileIdConnector()->authenticate($request);
             $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus(
-                $response->getSessionId(),
-                '/mid-api/authentication/session/{sessionId}'
+                $response->getSessionId()
             );
+
             $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
             $validator = new AuthenticationResponseValidator();
             $authenticationResult = $validator->validate($authentication);
-        } catch (Exception $e) {
-            throw new MidAuthException($e);
+        } catch (NotMidClientException $e) {
+            throw new MidAuthException($e->getMessage());
         }
         if (!$authenticationResult->isValid()) {
             throw new MidAuthException($authenticationResult->getErrors());

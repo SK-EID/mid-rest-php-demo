@@ -1,12 +1,11 @@
 <?php
-class UserMidSession {
+namespace Sk\Mid\Demo\Model;
 
+class UserMidSession {
     /** @var SigningSessionInfo $signingSessionInfo */
     private $signingSessionInfo;
-
     /** @var AuthenticationSessionInfo $authenticationSessionInfo */
     private $authenticationSessionInfo;
-
     /**
      * @return SigningSessionInfo
      */
@@ -14,7 +13,6 @@ class UserMidSession {
     {
         return $this->signingSessionInfo;
     }
-
     /**
      * @param SigningSessionInfo $signingSessionInfo
      */
@@ -22,7 +20,6 @@ class UserMidSession {
     {
         $this->signingSessionInfo = $signingSessionInfo;
     }
-
     /**
      * @return AuthenticationSessionInfo
      */
@@ -30,7 +27,6 @@ class UserMidSession {
     {
         return $this->authenticationSessionInfo;
     }
-
     /**
      * @param AuthenticationSessionInfo $authenticationSessionInfo
      */
@@ -38,13 +34,9 @@ class UserMidSession {
     {
         $this->authenticationSessionInfo = $authenticationSessionInfo;
     }
-
-
-
     public function clearSigningSession() {
         $this->signingSessionInfo = null;
     }
-
     public function clearAuthenticationSessionInfo() {
         $this->authenticationSessionInfo = null;
     }

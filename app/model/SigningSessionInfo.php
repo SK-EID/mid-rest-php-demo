@@ -1,10 +1,10 @@
 <?php
+namespace Sk\Mid\Demo\Model;
 
 class SigningSessionInfo
 {
     /** @var string $sessionId */
     private $sessionId;
-
     /** @var string $verificationCode */
     private $verificationCode;
 
@@ -13,7 +13,6 @@ class SigningSessionInfo
         $this->sessionId = $builder->getSessionId();
         $this->verificationCode = $builder->getVerificationCode();
     }
-
     /**
      * @return string
      */
@@ -21,7 +20,6 @@ class SigningSessionInfo
     {
         return $this->sessionId;
     }
-
     /**
      * @return string
      */
@@ -30,18 +28,16 @@ class SigningSessionInfo
         return $this->verificationCode;
     }
 
+
     public static function newBuilder() : Builder
     {
         return new Builder();
     }
 }
-
 class Builder
 {
-
     /** @var string $sessionId */
     private $sessionId;
-
     /** @var string $verificationCode */
     private $verificationCode;
 
@@ -51,7 +47,6 @@ class Builder
     public function __construct()
     {
     }
-
     /**
      * @return string
      */
@@ -59,7 +54,6 @@ class Builder
     {
         return $this->sessionId;
     }
-
     /**
      * @return string
      */
@@ -84,6 +78,4 @@ class Builder
     {
         return new SigningSessionInfo($this);
     }
-
-
 }

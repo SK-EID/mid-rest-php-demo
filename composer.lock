@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf8618b3d0d9a049b45531b99e306bda",
+    "content-hash": "319a24b8399270f0c311c4f2a40d48f3",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1566,7 +1566,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikk125/mid-rest-php-client",
-                "reference": "5ec985e637819edcf4bc26b2e0c7dcac3b1b6d16"
+                "reference": "af2ebbd2eea8f27b2632fc2cd4db04527ff80a7c"
             },
             "require": {
                 "ext-curl": "*",
@@ -1592,7 +1592,7 @@
                 "MIT"
             ],
             "description": "Mobile-ID Relying Party PHP Api v5 client",
-            "time": "2019-03-08T12:25:18+00:00"
+            "time": "2019-03-11T09:31:00+00:00"
         },
         {
             "name": "symfony/contracts",

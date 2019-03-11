@@ -1,20 +1,18 @@
 <?php
+namespace Sk\Mid\Demo\Model;
+
+use DateTime;
 
 class SigningResult
 {
-
     /** @var string $result */
     private $result;
-
     /** @var boolean $valid */
     private $valid;
-
     /** @var DateTime $timestamp */
     private $timestamp;
-
     /** @var string $containerFilePath */
     private $containerFilePath;
-
     public function __construct(Builder $builder)
     {
         $this->result = $builder->getResult();
@@ -22,7 +20,6 @@ class SigningResult
         $this->timestamp = $builder->getTimestamp();
         $this->containerFilePath = $builder->getContainerFilePath();
     }
-
     /**
      * @return string
      */
@@ -30,7 +27,6 @@ class SigningResult
     {
         return $this->result;
     }
-
     /**
      * @return bool
      */
@@ -38,7 +34,6 @@ class SigningResult
     {
         return $this->valid;
     }
-
     /**
      * @return DateTime
      */
@@ -46,7 +41,6 @@ class SigningResult
     {
         return $this->timestamp;
     }
-
     /**
      * @return string
      */
@@ -54,36 +48,27 @@ class SigningResult
     {
         return $this->containerFilePath;
     }
-
     public static function newBuilder() : Builder
     {
         return new Builder();
     }
-
 }
-
 class Builder
 {
-
     /** @var string $result */
     private $result;
-
     /** @var boolean $valid */
     private $valid;
-
     /** @var DateTime $timestamp */
     private $timestamp;
-
     /** @var string $containerFilePath */
     private $containerFilePath;
-
     /**
      * Builder constructor.
      */
     public function __construct()
     {
     }
-
     /**
      * @return string
      */
@@ -91,7 +76,6 @@ class Builder
     {
         return $this->result;
     }
-
     /**
      * @return bool
      */
@@ -99,7 +83,6 @@ class Builder
     {
         return $this->valid;
     }
-
     /**
      * @return DateTime
      */
@@ -107,7 +90,6 @@ class Builder
     {
         return $this->timestamp;
     }
-
     /**
      * @return string
      */
@@ -115,32 +97,26 @@ class Builder
     {
         return $this->containerFilePath;
     }
-
     public function withResult(string $result) : Builder
     {
         $this->result = $result;
         return $this;
     }
-
     public function withValid(bool $valid) : Builder
     {
         $this->valid = $valid;
         return $this;
     }
-
     public function withTimestamp(DateTime $dateTime) : Builder
     {
         $this->datetime = $dateTime;
         return $this;
     }
-
     public function withContainerFilePath(string $containerFilePath) : Builder
     {
         $this->containerFilePath = $containerFilePath;
         return $this;
     }
-
-
     public function build(): SigningResult
     {
         return new SigningResult($this);
