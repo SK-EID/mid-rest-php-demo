@@ -2,6 +2,7 @@
 
 namespace Sk\Middemo\Service;
 
+use Exception;
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\Exception\NotMidClientException;
@@ -48,8 +49,6 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
         $userRequest = $authenticationSessionInfo->getUserRequest();
         $authenticationHash = $authenticationSessionInfo->getAuthenticationHash();
         $request = AuthenticationRequest::newBuilder()
-            ->withRelyingPartyUUID($this->client->getRelyingPartyUUID())
-            ->withRelyingPartyName($this->client->getRelyingPartyName())
             ->withPhoneNumber($userRequest->getPhoneNumber())
             ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
             ->withHashToSign($authenticationHash)
@@ -69,14 +68,13 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
             $validator = new AuthenticationResponseValidator();
             $authenticationResult = $validator->validate($authentication);
-        } catch (NotMidClientException $e) {
+        } catch (Exception $e) {
             throw new MidAuthException($e->getMessage());
         }
         if (!$authenticationResult->isValid()) {
             throw new MidAuthException($authenticationResult->getErrors());
         }
         return $authenticationResult->getAuthenticationIdentity();
-
     }
 }
 
