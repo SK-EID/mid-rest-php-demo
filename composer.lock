@@ -1566,7 +1566,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikk125/mid-rest-php-client",
-                "reference": "af2ebbd2eea8f27b2632fc2cd4db04527ff80a7c"
+                "reference": "6d951b92bf68209d62ca965b4e910b8251e5fd1a"
             },
             "require": {
                 "ext-curl": "*",
@@ -1592,7 +1592,7 @@
                 "MIT"
             ],
             "description": "Mobile-ID Relying Party PHP Api v5 client",
-            "time": "2019-03-11T09:31:00+00:00"
+            "time": "2019-03-11T12:02:20+00:00"
         },
         {
             "name": "symfony/contracts",

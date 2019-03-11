@@ -1,5 +1,5 @@
 <?php
-namespace Sk\Mid\Demo\Model;
+namespace Sk\Middemo\Model;
 
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 
@@ -100,4 +100,4 @@ class Builder
     }
 }
 
-?>
+

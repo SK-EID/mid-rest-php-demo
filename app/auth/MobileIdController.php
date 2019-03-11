@@ -1,9 +1,11 @@
 <?php
 
-use Sk\Mid\Demo\Config;
-use Sk\Mid\Demo\Model\UserRequest;
-use Sk\Mid\Demo\service\MobileIdAuthenticationService;
+
+use Sk\Middemo\Config;
+use Sk\Middemo\Model\UserRequest;
+use Sk\Middemo\Service\MobileIdAuthenticationService;
 use Symfony\Component\HttpFoundation\Request;
+
 $app->post('/authentication-request', function (Request $request) use ($app) {
     $config = new Config();
     $client = $config->mobileIdClient();

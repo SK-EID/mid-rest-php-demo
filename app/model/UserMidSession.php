@@ -1,5 +1,5 @@
 <?php
-namespace Sk\Mid\Demo\Model;
+namespace Sk\Middemo\Model;
 
 class UserMidSession {
     /** @var SigningSessionInfo $signingSessionInfo */
@@ -41,5 +41,3 @@ class UserMidSession {
         $this->authenticationSessionInfo = null;
     }
 }
-
-?>

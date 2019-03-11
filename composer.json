@@ -17,11 +17,10 @@
         "ext-openssl": "*",
         "phpunit/phpunit": "^7.0",
         "sk-id-solutions/mobile-id-php-client": "dev-master",
-        "pimple/pimple": "~3.0"
     },
     "autoload": {
         "psr-4": {
-            "Sk\\Mid\\Demo\\": "app"
+            "Sk\\Middemo\\": "app"
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Sk\Mid\Demo;
+namespace Sk\Middemo;
 
 use Exception;
 use Silex\Application;

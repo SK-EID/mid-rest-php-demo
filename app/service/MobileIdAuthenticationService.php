@@ -1,18 +1,17 @@
 <?php
 
-namespace Sk\Mid\Demo\service;
+namespace Sk\Middemo\Service;
 
-use Exception;
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\Demo\Exception\MidAuthException;
-use Sk\Mid\Demo\Model\AuthenticationSessionInfo;
-use Sk\Mid\Demo\Model\UserRequest;
 use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use Sk\Middemo\Exception\MidAuthException;
+use Sk\Middemo\Model\AuthenticationSessionInfo;
+use Sk\Middemo\Model\UserRequest;
 
 interface MobileIdAuthenticationServiceInterface
 {

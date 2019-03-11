@@ -1,7 +1,9 @@
 <?php
-namespace Sk\Mid\Demo;
-use Sk\Mid\Demo\Model\UserMidSession;
+namespace Sk\Middemo;
+
+
 use Sk\Mid\MobileIdClient;
+use Sk\Middemo\Model\UserMidSession;
 
 class Config
 {

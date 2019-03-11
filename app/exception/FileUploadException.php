@@ -1,5 +1,5 @@
 <?php
-namespace Sk\Mid\Demo\Exception;
+namespace Sk\Middemo\Exception;
 
 use RuntimeException;
 use Throwable;

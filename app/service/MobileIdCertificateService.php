@@ -1,9 +1,9 @@
 <?php
-namespace Sk\Mid\Demo\service;
+namespace Sk\Middemo\Service;
 
-use Sk\Mid\Demo\Model\UserRequest;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
+use Sk\Middemo\Model\UserRequest;
 
 interface MobileIdCertificateServiceInterface {
     public function getCertificate(UserRequest $userRequest) : array;
