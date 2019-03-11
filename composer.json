@@ -16,7 +16,7 @@
         "ext-curl": "*",
         "ext-openssl": "*",
         "phpunit/phpunit": "^7.0",
-        "sk-id-solutions/mobile-id-php-client": "dev-master",
+        "sk-id-solutions/mobile-id-php-client": "dev-master"
     },
     "autoload": {
         "psr-4": {

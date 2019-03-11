@@ -8,7 +8,7 @@ class SigningSessionInfo
     /** @var string $verificationCode */
     private $verificationCode;
 
-    public function __construct(Builder $builder)
+    public function __construct(SigningSessionInfoBuilder $builder)
     {
         $this->sessionId = $builder->getSessionId();
         $this->verificationCode = $builder->getVerificationCode();
@@ -29,12 +29,12 @@ class SigningSessionInfo
     }
 
 
-    public static function newBuilder() : Builder
+    public static function newBuilder() : SigningSessionInfoBuilder
     {
-        return new Builder();
+        return new SigningSessionInfoBuilder();
     }
 }
-class Builder
+class SigningSessionInfoBuilder
 {
     /** @var string $sessionId */
     private $sessionId;
@@ -62,13 +62,13 @@ class Builder
         return $this->verificationCode;
     }
 
-    public function withSessionId(string $sessionId) : Builder
+    public function withSessionId(string $sessionId) : SigningSessionInfoBuilder
     {
         $this->sessionId = $sessionId;
         return $this;
     }
 
-    public function withVerificationCode(string $verificationCode) : Builder
+    public function withVerificationCode(string $verificationCode) : SigningSessionInfoBuilder
     {
         $this->verificationCode = $verificationCode;
         return $this;
