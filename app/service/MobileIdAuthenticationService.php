@@ -91,9 +91,9 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
         } catch (InvalidUserConfigurationException $e) {
             throw new MidOperationException("Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
         } catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
-            throw new MidOperationException("Client side error with mobile-ID integration.", e);
+            throw new MidOperationException("Client side error with mobile-ID integration.", $e->getCode());
         } catch (MidInternalErrorException $e) {
-            throw new MidOperationException("MID internal error", e);
+            throw new MidOperationException("MID internal error", $e->getCode());
         }
 
         if (!$authenticationResult->isValid()) {
