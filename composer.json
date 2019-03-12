@@ -15,7 +15,7 @@
         "ext-json": "*",
         "ext-curl": "*",
         "ext-openssl": "*",
-        "sk-id-solutions/mobile-id-php-client": "dev-master",
+        "sk-id-solutions/mobile-id-php-client": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0",
