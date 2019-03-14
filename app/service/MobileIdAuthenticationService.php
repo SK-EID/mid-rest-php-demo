@@ -2,15 +2,25 @@
 
 namespace Sk\Middemo\Service;
 
-use Exception;
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
+use Sk\Mid\DisplayTextFormat;
+use Sk\Mid\Exception\DeliveryException;
+use Sk\Mid\Exception\InvalidUserConfigurationException;
+use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Exception\MidSessionNotFoundException;
+use Sk\Mid\Exception\MidSessionTimeoutException;
+use Sk\Mid\Exception\MissingOrInvalidParameterException;
+use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\PhoneNotAvailableException;
+use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\UserCancellationException;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\MidIdentity;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
-use Sk\Middemo\Exception\MidAuthException;
+use Sk\Middemo\Exception\MidOperationException;
 use Sk\Middemo\Model\AuthenticationSessionInfo;
 use Sk\Middemo\Model\UserRequest;
 
@@ -54,7 +64,7 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             ->withHashToSign($authenticationHash)
             ->withLanguage(ENG::asType())
             ->withDisplayText($this->midAuthDisplayText)
-            ->withDisplayTextFormat('GSM7')
+            ->withDisplayTextFormat(DisplayTextFormat::GSM7)
             ->build();
 
         $authenticationResult = null;
@@ -68,11 +78,26 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
             $validator = new AuthenticationResponseValidator();
             $authenticationResult = $validator->validate($authentication);
-        } catch (Exception $e) {
-            throw new MidAuthException($e->getMessage());
+        } catch (UserCancellationException $e) {
+            throw new MidOperationException("You cancelled operation from your phone.");
+        } catch (NotMidClientException $e) {
+            throw new MidOperationException("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+        } catch (MidSessionTimeoutException $e) {
+            throw new MidOperationException("You didn't type in PIN code into your phone or there was a communication error.");
+        } catch (PhoneNotAvailableException $e) {
+            throw new MidOperationException("Unable to reach your phone. Please make sure your phone has mobile coverage.");
+        } catch (DeliveryException $e) {
+            throw new MidOperationException("Communication error. Unable to reach your phone.");
+        } catch (InvalidUserConfigurationException $e) {
+            throw new MidOperationException("Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
+        } catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
+            throw new MidOperationException("Client side error with mobile-ID integration.", $e->getCode());
+        } catch (MidInternalErrorException $e) {
+            throw new MidOperationException("MID internal error", $e->getCode());
         }
+
         if (!$authenticationResult->isValid()) {
-            throw new MidAuthException($authenticationResult->getErrors());
+            throw new MidOperationException($authenticationResult->getErrors());
         }
         return $authenticationResult->getAuthenticationIdentity();
     }
