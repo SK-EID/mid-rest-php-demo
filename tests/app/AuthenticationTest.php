@@ -26,7 +26,7 @@ class AuthenticationTest extends TestCase
     /**
      * @test
      */
-    public function testAuthentication()
+    public function testAuthentication_returnsVerificationCode()
     {
         $data = array(
             'form_params' => array(
