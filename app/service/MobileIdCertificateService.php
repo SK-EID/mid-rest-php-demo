@@ -21,7 +21,7 @@ class MobileIdCertificateService implements MobileIdCertificateServiceInterface
             ->withPhoneNumber($userRequest->getPhoneNumber())
             ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
             ->build();
-        $response = $this->client->getMobileIdConnector()->getCertificate($request);
+        $response = $this->client->getMobileIdConnector()->pullCertificate($request);
         return $this->client->createMobileIdCertificate($response);
     }
 }

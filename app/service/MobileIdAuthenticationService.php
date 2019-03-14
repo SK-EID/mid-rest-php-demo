@@ -5,8 +5,8 @@ namespace Sk\Middemo\Service;
 use Exception;
 use Sk\Mid\AuthenticationIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Language\ENG;
+use Sk\Mid\MidIdentity;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
@@ -18,7 +18,7 @@ interface MobileIdAuthenticationServiceInterface
 {
     public function startAuthentication(UserRequest $userRequest): AuthenticationSessionInfo;
 
-    public function authenticate(AuthenticationSessionInfo $authenticationSessionInfo): AuthenticationIdentity;
+    public function authenticate(AuthenticationSessionInfo $authenticationSessionInfo): MidIdentity;
 }
 
 class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInterface
@@ -44,7 +44,7 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
             ->build();
     }
 
-    public function authenticate(AuthenticationSessionInfo $authenticationSessionInfo): AuthenticationIdentity
+    public function authenticate(AuthenticationSessionInfo $authenticationSessionInfo): MidIdentity
     {
         $userRequest = $authenticationSessionInfo->getUserRequest();
         $authenticationHash = $authenticationSessionInfo->getAuthenticationHash();
@@ -60,7 +60,7 @@ class MobileIdAuthenticationService implements MobileIdAuthenticationServiceInte
         $authenticationResult = null;
         try {
 
-            $response = $this->client->getMobileIdConnector()->authenticate($request);
+            $response = $this->client->getMobileIdConnector()->initAuthentication($request);
             $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus(
                 $response->getSessionId()
             );

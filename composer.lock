@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "319a24b8399270f0c311c4f2a40d48f3",
+    "content-hash": "bf8618b3d0d9a049b45531b99e306bda",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1566,7 +1566,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikk125/mid-rest-php-client",
-                "reference": "6d951b92bf68209d62ca965b4e910b8251e5fd1a"
+                "reference": "312cd5ca2edcbeeb9b436dd9adcf175ca93c1b7b"
             },
             "require": {
                 "ext-curl": "*",
@@ -1592,7 +1592,7 @@
                 "MIT"
             ],
             "description": "Mobile-ID Relying Party PHP Api v5 client",
-            "time": "2019-03-11T12:02:20+00:00"
+            "time": "2019-03-14T07:57:03+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -2161,16 +2161,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.6.2",
+            "version": "v2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "7d7342c8a4059fefb9b8d07db0cc14007021f9b7"
+                "reference": "70c59531da43afe598c66135e39cac39475a2f51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7d7342c8a4059fefb9b8d07db0cc14007021f9b7",
-                "reference": "7d7342c8a4059fefb9b8d07db0cc14007021f9b7",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/70c59531da43afe598c66135e39cac39475a2f51",
+                "reference": "70c59531da43afe598c66135e39cac39475a2f51",
                 "shasum": ""
             },
             "require": {
@@ -2186,7 +2186,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
@@ -2224,7 +2224,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-01-14T15:00:48+00:00"
+            "time": "2019-03-12T18:48:26+00:00"
         },
         {
             "name": "webmozart/assert",
