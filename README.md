@@ -1,5 +1,7 @@
 # MID-REST PHP DEMO APPLICATION
 
+Demonstrates authentication with Mobile-ID using [mid-rest-php-client](https://github.com/SK-EID/mid-rest-php-client).
+
 ## Run in docker
 
 ```
