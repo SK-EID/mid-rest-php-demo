@@ -11,14 +11,6 @@ docker run -it -p 2080:80/tcp --rm mid-rest-php-demo
 
 After that open application with your browser at http://localhost:2080
 
-## Build locally
-
-Get dependencies
-```
-composer install
-```
-Run in your local web server
-
 # Test numbers
 
 Demo is initially configured to send requests to a public demo environment hosted by SK ID Solutions AS.
