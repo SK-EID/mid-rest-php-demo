@@ -1,13 +1,14 @@
-FROM php:7.2-apache
-RUN a2enmod rewrite
-RUN apt-get update && apt-get install -y \
-        zip \
-        unzip \
-        git
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-COPY composer.json ./
-COPY composer.lock ./
-RUN composer install --no-scripts --no-autoloader
-COPY . /var/www/html/
-WORKDIR /var/www/html
-RUN composer dump-autoload --optimize
+FROM mattrayner/lamp:latest
+
+COPY ./ /app
+
+COPY run.sh /run.sh
+
+COPY makeAppTables.sh /makeAppTables.sh
+
+RUN chmod +x /run.sh
+RUN chmod +x /makeAppTables.sh
+
+RUN wget https://get.symfony.com/cli/installer -O - | bash
+
+CMD ["/run.sh"]
