@@ -1,5 +1,7 @@
 # MID-REST PHP DEMO APPLICATION
 
+This is only for demonstration purposes to bu run inside Docker.
+
 Demonstrates authentication with Mobile-ID using [mid-rest-php-client](https://github.com/SK-EID/mid-rest-php-client).
 
 ## Run in docker
@@ -10,14 +12,6 @@ docker run -it -p 2080:80/tcp --rm mid-rest-php-demo
 ```
 
 After that open application with your browser at http://localhost:2080
-
-## Build locally
-
-Get dependencies
-```
-composer install
-```
-Run in your local web server
 
 # Test numbers
 
