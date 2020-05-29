@@ -1,20 +1,33 @@
-# MID-REST PHP DEMO APPLICATION
+**MID REST php demo application**
 
-This is only for demonstration purposes to bu run inside Docker.
+This application demonstrates how to use the mid-rest-php-client in a symfony application to authenticate and authorize users.
 
-Demonstrates authentication with Mobile-ID using [mid-rest-php-client](https://github.com/SK-EID/mid-rest-php-client).
+## Requirements
 
-## Run in docker
+You must have docker installed in order to use the application
 
-```
-docker build -t mid-rest-php-demo .
-docker run -it -p 2080:80/tcp --rm mid-rest-php-demo
-```
+## Building the image
 
-After that open application with your browser at http://localhost:2080
+This step needs to be runned only on the initial build of the application
 
-# Test numbers
+First build the docker image, by issuing the next command in the application folder
 
-Demo is initially configured to send requests to a public demo environment hosted by SK ID Solutions AS.
-There are [test numbers](https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO)
-that can be used to simulate different scenarios.
+`docker build -t mid-rest-php-demo:1.0 ./`
+
+## Running the application
+
+For running the previously built image issue the following command
+
+`docker run -p 8001:8000 --env-file docker.env -it mid-rest-php-demo:1.0`
+
+The application should start up in about 30 seconds
+
+## Accessing the application
+
+For accessing the application go to the following url in your browser
+
+[http://localhost:8001/login](http://localhost:8001/login)
+
+Now you can try to log in to the application
+
+- Enter the phone number without country code prefix.

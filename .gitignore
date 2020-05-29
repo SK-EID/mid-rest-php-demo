@@ -1,1 +1,6 @@
-/vendor/
+.idea
+bower_components/
+backend/composer.lock
+backend/composer.phar
+backend/vendor/
+docker/composer.phar
