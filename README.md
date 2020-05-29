@@ -1,5 +1,7 @@
 **MID REST php demo application**
 
+This application demonstrates how to use the mid-rest-php-client in a symfony application to authenticate and authorize users.
+
 ## Requirements
 
 You must have docker installed in order to use the application
