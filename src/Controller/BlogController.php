@@ -61,6 +61,6 @@ class BlogController extends AbstractController
         $blogPost->setSlug("slug");
         $this->objectManager->persist($blogPost);
         $this->objectManager->flush();
-        return $this->showPosts($security);
+        return $this->showPosts($security, $request);
     }
 }
