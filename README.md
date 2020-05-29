@@ -29,3 +29,5 @@ For accessing the application go to the following url in your browser
 [http://localhost:8001/login](http://localhost:8001/login)
 
 Now you can try to log in to the application
+
+- Enter the phone number without country code prefix.
