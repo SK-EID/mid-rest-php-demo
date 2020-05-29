@@ -12,6 +12,13 @@ use Symfony\Component\Security\Core\Security;
 class LoginController extends AbstractController
 {
 
+    /**
+     * @Route("/", name="home")
+     */
+    public function index(Security $security, Request $request) {
+        return $this->login($security, $request);
+    }
+
 
     /**
      * @Route("/login", name="login")

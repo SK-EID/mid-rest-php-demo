@@ -126,7 +126,8 @@ class MobileIdAuthenticator extends AbstractGuardAuthenticator
 
         $countryCodeToNumberMap = [
             "EE" => "+372",
-            "LT" => "+370"
+            "LT" => "+370",
+            "LV" => "+371"
         ];
 
         $nationalIdentityNumber = $credentials["national-identity-number"];
@@ -191,6 +192,8 @@ class MobileIdAuthenticator extends AbstractGuardAuthenticator
                 ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash)
                 ->getValidatedAuthenticationResult()
                 ->getAuthenticationIdentity();
+
+            $session->set("full_name" ,$authenticatedPerson->getGivenName());
         }
         catch (UserCancellationException $e) {
             $session->set("error", "You cancelled operation from your phone.");

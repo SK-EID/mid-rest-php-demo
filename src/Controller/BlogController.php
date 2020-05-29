@@ -31,7 +31,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog", name="blog")
      */
-    public function showPosts(Security $security)
+    public function showPosts(Security $security, Request $request)
     {
         $user = $security->getUser();
         $blogPosts = $this->blogPostRepository->findBy(["author" => $user->getId()]);
@@ -40,7 +40,8 @@ class BlogController extends AbstractController
             'controller_name' => 'BlogController',
             'users_posts' => $blogPosts,
             'blog_posts_all' => $blogPostsAll,
-            'user' => $user
+            'user' => $user,
+            'full_name' => $request->getSession()->get("full_name")
         ]);
     }
 
