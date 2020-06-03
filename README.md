@@ -43,7 +43,7 @@ Now you can try to log in to the application
 - [symfony cli tool](https://symfony.com/download)
 - mysql (others are not tested) server installed
 
-### Database migrtion
+### Database migration
 - create database mid_rest_demo
 - create user mid_rest_demo, with password mid_rest_demo
 - Run migration scripts
