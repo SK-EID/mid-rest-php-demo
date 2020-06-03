@@ -1,4 +1,4 @@
-#MID REST php demo application
+# MID REST php demo application
 
 This application demonstrates how to use the mid-rest-php-client in a symfony application to authenticate and authorize users.
 
