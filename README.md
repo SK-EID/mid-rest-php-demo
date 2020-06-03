@@ -1,6 +1,6 @@
 # MID REST php demo application
 
-This application demonstrates how to use the mid-rest-php-client in a symfony application to authenticate and authorize users.
+This application demonstrates how to use the [mid-rest-php-client](https://github.com/SK-EID/mid-rest-php-client) in a symfony application to authenticate and authorize users.
 
 ## Building and running with docker
 
@@ -35,21 +35,25 @@ Now you can try to log in to the application
 - Enter the phone number without country code prefix.
 
 
-## Running the application without docker
+## Running the application without Docker
 
 ### Requirements
 
 - php >= 7.3, including curl, mysql, dom extensions
 - [symfony cli tool](https://symfony.com/download)
-- mysql (others are not tested) server installed
+- mysql server installed
 
 ### Database migration
 - create database mid_rest_demo
+    - `CREATE DATABASE mid_rest_demo;`
 - create user mid_rest_demo, with password mid_rest_demo
+    - `CREATE USER 'mid_rest_demo' IDENTIFIED BY 'mid_rest_demo;`
+- grant the new user all privileges on the database
+    - `GRANT ALL PRIVILEGES ON mid_rest_demo.* TO 'mid_rest_demo';`
 - Run migration scripts
 
-1. `php bin/console make:migrate`
-1. `php bin/console doctrine:migrations:migrate`
+    1. `php bin/console make:migrate`
+    1. `php bin/console doctrine:migrations:migrate`
 
 ### Configuring the application
 
@@ -57,3 +61,7 @@ Now you can try to log in to the application
 
 ### Running the application
 1. run `symfony serve` in the project folder
+
+### Accessing the aplication
+
+Access the application from [localhost:8000](localhost:8000)
