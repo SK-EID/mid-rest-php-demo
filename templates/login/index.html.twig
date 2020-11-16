@@ -27,7 +27,6 @@
                                 <label for="exampleInputEmail1">Country</label>
                                 <select class="form-control" name="country" form="loginForm">
                                     <option {% if country == "EE" %} selected {% endif %} value="EE">Estonia</option>
-                                    <option {% if country == "LV" %} selected {% endif %} value="LV">Latvia</option>
                                     <option {% if country == "LT" %} selected {% endif %} value="LT">Lithuania</option>
                                 </select>
                             </div>
@@ -41,7 +40,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Phone number</label>
+                                <label for="exampleInputEmail1">Phone number (without country code)</label>
                                 {% if phone_number %}
                                     <input class="form-control" type="text" name="phone-number" value="{{ phone_number }}" disabled>
                                 {% else %}
