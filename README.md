@@ -7,8 +7,7 @@
 
 This application demonstrates how to use the [mid-rest-php-client](https://github.com/SK-EID/mid-rest-php-client) in a symfony application to authenticate and authorize users.
 
-It runs on PHP 8.4 (8.4.27 or newer, which includes the PHP2Shell fix) with Symfony 7.4 LTS
-and mid-rest-php-client 1.2.
+It runs on PHP 8.4 (8.4.27 or newer, which includes the PHP2Shell fix) with Symfony 7.4 LTS and mid-rest-php-client 1.3.
 
 ## Building and running with Docker
 

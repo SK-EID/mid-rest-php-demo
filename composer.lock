@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60ac0e9eedc43d9fcea848cd92792bd3",
+    "content-hash": "8e47847f9efe8d0e1740051ac828a91c",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1382,24 +1382,24 @@
         },
         {
             "name": "sk-id-solutions/mobile-id-php-client",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SK-EID/mid-rest-php-client.git",
-                "reference": "d1402b8e1945d467766ae196dad2036d5e6063f5"
+                "reference": "e80670c50f820cc23a5794ef5a591702dbaa1902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SK-EID/mid-rest-php-client/zipball/d1402b8e1945d467766ae196dad2036d5e6063f5",
-                "reference": "d1402b8e1945d467766ae196dad2036d5e6063f5",
+                "url": "https://api.github.com/repos/SK-EID/mid-rest-php-client/zipball/e80670c50f820cc23a5794ef5a591702dbaa1902",
+                "reference": "e80670c50f820cc23a5794ef5a591702dbaa1902",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
-                "php": ">=7.4||~8",
-                "sop/x509": "*"
+                "php": ">=8.4",
+                "sop/x509": "0.7.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.*"
@@ -1417,9 +1417,9 @@
             "description": "Mobile-ID Relying Party PHP Api client",
             "support": {
                 "issues": "https://github.com/SK-EID/mid-rest-php-client/issues",
-                "source": "https://github.com/SK-EID/mid-rest-php-client/tree/v1.2.1"
+                "source": "https://github.com/SK-EID/mid-rest-php-client/tree/v1.3.0"
             },
-            "time": "2023-04-06T14:41:45+00:00"
+            "time": "2026-11-02T11:44:57+00:00"
         },
         {
             "name": "sop/asn1",
