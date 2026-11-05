@@ -7,8 +7,8 @@ use App\Repository\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Attribute\Route;
 
 class BlogController extends AbstractController
 {
@@ -28,33 +28,26 @@ class BlogController extends AbstractController
         $this->objectManager = $objectManager;
     }
 
-    /**
-     * @Route("/blog", name="blog")
-     */
+    #[Route("/blog", name: "blog")]
     public function showPosts(Security $security, Request $request)
     {
         $user = $security->getUser();
-        $blogPosts = $this->blogPostRepository->findBy(["author" => $user->getId()]);
         $blogPostsAll = $this->blogPostRepository->findAll();
         return $this->render('blog/index.html.twig', [
-            'controller_name' => 'BlogController',
-            'users_posts' => $blogPosts,
             'blog_posts_all' => $blogPostsAll,
             'user' => $user,
             'full_name' => $request->getSession()->get("full_name")
         ]);
     }
 
-    /**
-     * @Route("/newPost", name="postblog", methods="POST")
-     */
+    #[Route("/newPost", name: "postblog", methods: ["POST"])]
     public function addPost(Request $request, Security $security) {
         $user = $security->getUser();
         $dateTime = new \DateTime();
         $blogPost = new BlogPost();
-        $blogPost->setTitle($request->get("title"));
-        $blogPost->setDescription($request->get("description"));
-        $blogPost->setBody($request->get("body"));
+        $blogPost->setTitle($request->request->get("title"));
+        $blogPost->setDescription($request->request->get("description"));
+        $blogPost->setBody($request->request->get("body"));
         $blogPost->setAuthor($user);
         $blogPost->setCreateAt($dateTime);
         $blogPost->setUpdatedAt($dateTime);

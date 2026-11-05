@@ -4,6 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    # Defaults point to the public SK MID demo environment; override them with real env vars
+    env(MID_HOST_URL): 'https://tsp.demo.sk.ee/mid-api'
+    env(MID_RELYING_PARTY_UUID): '00000000-0000-0000-0000-000000000000'
+    env(MID_RELYING_PARTY_NAME): 'DEMO'
+    # sha256 hashes of the MID API host SSL public keys, separated by ';' (see mid-rest-php-client README)
+    env(MID_SSL_PINNED_PUBLIC_KEYS): 'sha256//Fnjp3/Yi4oPFBG+GtDV2ZVJEPcVVJA5r/T7QK+VXPpM='
+    env(MID_TRUSTED_CA_CERTIFICATES_DIR): '%kernel.project_dir%/src/trusted_certificates'
 
 services:
     # default configuration for services in *this* file
@@ -14,17 +21,22 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Migrations/'
+            - '../src/Tests/'
+            - '../src/trusted_certificates/'
+            - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    mid_authenticator:
-        class: App\Security\MobileIdAuthenticator
+    App\Security\MobileIdAuthenticator:
+        arguments:
+            $hostUrl: '%env(MID_HOST_URL)%'
+            $relyingPartyUuid: '%env(MID_RELYING_PARTY_UUID)%'
+            $relyingPartyName: '%env(MID_RELYING_PARTY_NAME)%'
+            $sslPinnedPublicKeys: '%env(MID_SSL_PINNED_PUBLIC_KEYS)%'
+            $trustedCaCertificatesDir: '%env(resolve:MID_TRUSTED_CA_CERTIFICATES_DIR)%'

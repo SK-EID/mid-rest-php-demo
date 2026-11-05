@@ -4,3 +4,11 @@ backend/composer.lock
 backend/composer.phar
 backend/vendor/
 docker/composer.phar
+
+/vendor/
+/var/
+/public/bundles/
+.env.local
+.env.*.local
+/config/reference.php
+/node_modules/

@@ -5,21 +5,17 @@ security:
     authors:
       entity:
         class: App\Entity\Author
+        property: username
   firewalls:
-#    verif:
-#      pattern: /verificationcode
-#      security: false
     main:
-      anonymous: lazy
+      lazy: true
+      provider: authors
+      custom_authenticators:
+        - App\Security\MobileIdAuthenticator
+      entry_point: App\Security\MobileIdAuthenticator
 
       logout:
         path: logout
         target: login
-
-      guard:
-        provider: authors
-        authenticators:
-          - mid_authenticator
   access_control:
-    - {path: '^/blog', roles: ROLE_ADMIN}
-    - { path: '^/verificationcode', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: '^/blog', roles: ROLE_ADMIN }

@@ -6,23 +6,19 @@ use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LoginController extends AbstractController
 {
 
-    /**
-     * @Route("/", name="home")
-     */
+    #[Route("/", name: "home")]
     public function index(Security $security, Request $request) {
         return $this->login($security, $request);
     }
 
 
-    /**
-     * @Route("/login", name="login")
-     */
+    #[Route("/login", name: "login")]
     public function login(Security $security, Request $request)
     {
         if ($security->isGranted('ROLE_ADMIN')) {
@@ -36,7 +32,6 @@ class LoginController extends AbstractController
         }
 
         return $this->render("login/index.html.twig", [
-            'controller_name' => 'LoginController',
             'verification_code' => false,
             'personal_id' => false,
             'phone_number' => false,
@@ -47,18 +42,16 @@ class LoginController extends AbstractController
 
     //The authentication hash gets generated and binded to the session, as well as user data
 
-    /**
-     * @Route("/startLogin", name="start_login")
-     */
+    #[Route("/startLogin", name: "start_login")]
     public function startLogin(Request $request) {
 
         $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
 
         $verificationCode = $authenticationHash->calculateVerificationCode();
 
-        $nationalIdentityNumber = $request->get("personal-id");
-        $country = $request->get("country");
-        $phoneNumber = $request->get("phone-number");
+        $nationalIdentityNumber = $request->request->get("personal-id");
+        $country = $request->request->get("country");
+        $phoneNumber = $request->request->get("phone-number");
 
         $request->getSession()->set("national-identity-number", $nationalIdentityNumber);
         $request->getSession()->set("country", $country);
@@ -66,7 +59,6 @@ class LoginController extends AbstractController
         $request->getSession()->set("phone-number", $phoneNumber);
 
         return $this->render("login/index.html.twig", [
-            'controller_name' => 'LoginController',
             'verification_code' => $verificationCode,
             'personal_id' => $nationalIdentityNumber,
             'login_error' => false,
@@ -75,10 +67,8 @@ class LoginController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/logout", name="logout")
-     */
-    public function logout(Security $security)
+    #[Route("/logout", name: "logout")]
+    public function logout()
     {
         throw new \Exception('This should never be reached!');
     }

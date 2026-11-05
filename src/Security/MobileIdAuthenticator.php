@@ -4,156 +4,117 @@
 namespace App\Security;
 
 
-use App\Controller\VerificationCodeController;
 use App\Entity\Author;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\DisplayTextFormat;
-use Sk\Mid\Exception\DeliveryException;
-use Sk\Mid\Exception\InvalidNationalIdentityNumberException;
-use Sk\Mid\Exception\InvalidPhoneNumberException;
-use Sk\Mid\Exception\InvalidUserConfigurationException;
+use Sk\Mid\Exception\MidDeliveryException;
 use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Exception\MidInvalidNationalIdentityNumberException;
+use Sk\Mid\Exception\MidInvalidPhoneNumberException;
+use Sk\Mid\Exception\MidInvalidUserConfigurationException;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidPhoneNotAvailableException;
+use Sk\Mid\Exception\MidServiceUnavailableException;
 use Sk\Mid\Exception\MidSessionNotFoundException;
 use Sk\Mid\Exception\MidSessionTimeoutException;
+use Sk\Mid\Exception\MidSslException;
+use Sk\Mid\Exception\MidUnauthorizedException;
+use Sk\Mid\Exception\MidUserCancellationException;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\PhoneNotAvailableException;
-use Sk\Mid\Exception\UnauthorizedException;
-use Sk\Mid\Exception\UserCancellationException;
 use Sk\Mid\Language\ENG;
+use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\MobileIdClientBuilder;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Util\MidInputUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
-class MobileIdAuthenticator extends AbstractGuardAuthenticator
+class MobileIdAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
 
-    private $authorRepo;
+    private const COUNTRY_CODE_TO_NUMBER_MAP = [
+        "EE" => "+372",
+        "LT" => "+370"
+    ];
 
-    private $objectManager;
+    private MobileIdClient $midRestClient;
 
-    /**
-     * @var Client
-     */
-    private $midRestClient;
+    private AuthenticationResponseValidator $authenticationResponseValidator;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(AuthorRepository $authorRepository,
-                                EntityManagerInterface $objectManager,
-                                LoggerInterface $logger)
+    public function __construct(private AuthorRepository $authorRepo,
+                                private EntityManagerInterface $objectManager,
+                                private LoggerInterface $logger,
+                                string $hostUrl,
+                                string $relyingPartyUuid,
+                                string $relyingPartyName,
+                                string $sslPinnedPublicKeys,
+                                string $trustedCaCertificatesDir)
     {
-        $this->authorRepo = $authorRepository;
-        $this->objectManager = $objectManager;
-        $this->midRestClient =  MobileIdClient::newBuilder()
-            ->withRelyingPartyUUID('00000000-0000-0000-0000-000000000000')
-            ->withRelyingPartyName('DEMO')
-            ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+        $this->midRestClient = MobileIdClient::newBuilder()
+            ->withRelyingPartyUUID($relyingPartyUuid)
+            ->withRelyingPartyName($relyingPartyName)
+            ->withHostUrl($hostUrl)
+            ->withSslPinnedPublicKeys($sslPinnedPublicKeys)
             ->build();
-        $this->logger=$logger;
+
+        // CA certificates that issued the users' Mobile-ID certificates (test CAs for the demo environment)
+        $this->authenticationResponseValidator = AuthenticationResponseValidator::newBuilder()
+            ->withTrustedCaCertificatesFolder(rtrim($trustedCaCertificatesDir, '/').'/')
+            ->build();
     }
 
 
-    public function supports(Request $request)
+    public function supports(Request $request): ?bool
     {
-        if ($request->getPathInfo() != '/login' || !$request->isMethod('POST')) {
-            return;
+        return $request->getPathInfo() == '/login' && $request->isMethod('POST');
+    }
+
+    public function authenticate(Request $request): Passport
+    {
+        $session = $request->getSession();
+
+        /** @var MobileIdAuthenticationHashToSign|null $authenticationHash */
+        $authenticationHash = $session->get("auth-hash");
+        $nationalIdentityNumber = (string) $session->get("national-identity-number");
+        $country = (string) $session->get("country");
+        $phoneNumber = (string) $session->get("phone-number");
+
+        if ($authenticationHash === null) {
+            $this->fail($session, "Please start the login again.");
         }
-        return true;
-    }
 
-    public function getCredentials(Request $request)
-    {
-        if ($request->getPathInfo() != '/login' || !$request->isMethod('POST')) {
-            return;
-        }
-
-        $nationalIdentityNumber = $request->getSession()->get("national-identity-number");
-        $authHash = $request->getSession()->get("auth-hash");
-        $country = $request->getSession()->get("country");
-        $phoneNumber = $request->getSession()->get("phone-number");
-        $this->logger->info($nationalIdentityNumber);
-
-        return [
-            "national-identity-number" => $nationalIdentityNumber,
-            "auth-hash" => $authHash,
-            "session" => $request->getSession(),
-            "country" => $country,
-            "phone-number" => $phoneNumber
-        ];
-    }
-
-    public function getUser($credentials, UserProviderInterface $userProvider)
-    {
-        //initially there is no user, so it is just created in the database
-        //In a real application a user should always be obtained from the database
-        $username = $credentials['national-identity-number'];
-        $user = $this->authorRepo->findOneBy(["username" => $username]);
-        if ($user == null) {
-            $author = new Author();
-            $author
-                ->setName($username)
-                ->setTitle('Mobile ID User')
-                ->setUsername($username)
-                ->setCompany('Development')
-                ->setShortBio('I write php')
-                ->setPhone($credentials["phone-number"]);
-            $this->objectManager->persist($author);
-            $this->objectManager->flush();
-            return $author;
-        }
-        return $user;
-    }
-
-    public function checkCredentials($credentials, UserInterface $user)
-    {
-
-        $countryCodeToNumberMap = [
-            "EE" => "+372",
-            "LT" => "+370",
-            "LV" => "+371"
-        ];
-
-        $nationalIdentityNumber = $credentials["national-identity-number"];
-        $authenticationHash = $credentials["auth-hash"];
-        $session = $credentials["session"];
-        $country = $credentials["country"];
-        $phoneNumber = $credentials["phone-number"];
-
-        $phoneNumber = $countryCodeToNumberMap[$country].$phoneNumber;
+        $phoneNumber = (self::COUNTRY_CODE_TO_NUMBER_MAP[$country] ?? '').$phoneNumber;
 
         try {
             $phoneNumber = MidInputUtil::getValidatedPhoneNumber($phoneNumber);
             $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($nationalIdentityNumber);
         }
-        catch (InvalidPhoneNumberException $e) {
-            $session->set("error", "You entered an invalid phone number '".$phoneNumber."'");
+        catch (MidInvalidPhoneNumberException $e) {
+            $this->fail($session, "You entered an invalid phone number '".$phoneNumber."'");
         }
-        catch (InvalidNationalIdentityNumberException $e) {
-            $session->set("error", "You entered an invalid national identity number '".$nationalIdentityNumber."'");
+        catch (MidInvalidNationalIdentityNumberException $e) {
+            $this->fail($session, "You entered an invalid national identity number '".$nationalIdentityNumber."'");
         }
 
-        //sleep so in case when user logs in from smart device, he/she can see the verification code on the webpage before the smart id application comes up
+        //sleep so in case when user logs in from smart device, he/she can see the verification code on the webpage before the mobile id application comes up
 
         sleep(2);
 
-        $request = AuthenticationRequest::newBuilder()
+        $authenticationRequest = AuthenticationRequest::newBuilder()
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
             ->withHashToSign($authenticationHash)
@@ -163,23 +124,25 @@ class MobileIdAuthenticator extends AbstractGuardAuthenticator
             ->build();
 
         try {
-            $response = $this->midRestClient->getMobileIdConnector()->initAuthentication($request);
+            $response = $this->midRestClient->getMobileIdConnector()->initAuthentication($authenticationRequest);
         }
-        catch (NotMidClientException $e) {
-            $session->set("error", "You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidNotMidClientException $e) {
+            $this->fail($session, "You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.", $e);
         }
-        catch (UnauthorizedException $e) {
-            $session->set("error", "You are not authorized");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidUnauthorizedException $e) {
+            $this->fail($session, "You are not authorized", $e);
         }
         catch (MissingOrInvalidParameterException $e) {
-            $session->set("error", "You entered missing or invalid parameters");
-            throw new AuthenticationException("Mid rest login failed");
+            $this->fail($session, "You entered missing or invalid parameters", $e);
+        }
+        catch (MidSslException $e) {
+            $this->fail($session, "Could not verify the SSL certificate of the Mobile-ID service", $e);
+        }
+        catch (MidServiceUnavailableException $e) {
+            $this->fail($session, "Mobile-ID service is currently unavailable. Please try again later.", $e);
         }
         catch (MidInternalErrorException $e) {
-            $session->set("error", "There was a Mid-Rest internal error");
-            throw new AuthenticationException("Mid rest login failed");
+            $this->fail($session, "There was a Mid-Rest internal error", $e);
         }
 
 
@@ -188,66 +151,97 @@ class MobileIdAuthenticator extends AbstractGuardAuthenticator
                 ->getSessionStatusPoller()
                 ->fetchFinalSessionStatus($response->getSessionID());
 
-            $authenticatedPerson = $this->midRestClient
-                ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash)
-                ->getValidatedAuthenticationResult()
+            $authentication = $this->midRestClient
+                ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash);
+
+            // validate the returned certificate and signature to protect against man-in-the-middle attacks
+            $authenticatedPerson = $this->authenticationResponseValidator
+                ->validate($authentication)
                 ->getAuthenticationIdentity();
 
-            $session->set("full_name" ,$authenticatedPerson->getGivenName());
+            $session->set("full_name", $authenticatedPerson->getGivenName());
         }
-        catch (UserCancellationException $e) {
-            $session->set("error", "You cancelled operation from your phone.");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidUserCancellationException $e) {
+            $this->fail($session, "You cancelled operation from your phone.", $e);
         }
-        catch (NotMidClientException $e) {
-            $session->set("error", "You are not a mid client");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidNotMidClientException $e) {
+            $this->fail($session, "You are not a mid client", $e);
         }
         catch (MidSessionTimeoutException $e) {
-            $session->set("error", "You didn't type in PIN code into your phone or there was a communication error.");
-            throw new AuthenticationException("Mid rest login failed");
+            $this->fail($session, "You didn't type in PIN code into your phone or there was a communication error.", $e);
         }
-        catch (PhoneNotAvailableException $e) {
-            $session->set("error", "Unable to reach your phone. Please make sure your phone has mobile coverage.");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidPhoneNotAvailableException $e) {
+            $this->fail($session, "Unable to reach your phone. Please make sure your phone has mobile coverage.", $e);
         }
-        catch (DeliveryException $e) {
-            $session->set("error", "Communication error. Unable to reach your phone.");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidDeliveryException $e) {
+            $this->fail($session, "Communication error. Unable to reach your phone.", $e);
         }
-        catch (InvalidUserConfigurationException $e) {
-            $session->set("error", "Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidInvalidUserConfigurationException $e) {
+            $this->fail($session, "Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.", $e);
         }
-        catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
-            $session->set("error", "Client side error with mobile-ID integration. Error code:". $e->getCode());
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidSessionNotFoundException | MissingOrInvalidParameterException | MidUnauthorizedException | MidSslException $e) {
+            $this->fail($session, "Client side error with mobile-ID integration. Error code:". $e->getCode(), $e);
         }
-        catch (MidInternalErrorException $internalError) {
-            $session->set("error", "Something went wrong with Mobile-ID service");
-            throw new AuthenticationException("Mid rest login failed");
+        catch (MidServiceUnavailableException $e) {
+            $this->fail($session, "Mobile-ID service is currently unavailable. Please try again later.", $e);
+        }
+        catch (MidInternalErrorException $e) {
+            $this->fail($session, "Something went wrong with Mobile-ID service", $e);
         }
 
-        return true;
+        $session->remove("error");
+
+        //initially there is no user, so it is just created in the database
+        //In a real application a user should always be obtained from the database
+        return new SelfValidatingPassport(new UserBadge(
+            $authenticatedPerson->getIdentityCode(),
+            fn (string $username) => $this->findOrCreateAuthor($username, $phoneNumber)
+        ));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
-    }
-
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return null;
     }
 
-    public function supportsRememberMe()
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return false;
+        $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+        return null;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         return new RedirectResponse("/login");
+    }
+
+    private function findOrCreateAuthor(string $username, string $phoneNumber): Author
+    {
+        $user = $this->authorRepo->findOneBy(["username" => $username]);
+        if ($user == null) {
+            $user = new Author();
+            $user
+                ->setName($username)
+                ->setTitle('Mobile ID User')
+                ->setUsername($username)
+                ->setCompany('Development')
+                ->setShortBio('I write php')
+                ->setPhone($phoneNumber);
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
+        return $user;
+    }
+
+    private function fail(SessionInterface $session, string $error, ?\Throwable $cause = null): never
+    {
+        // the user sees a generic message, so log the real cause for troubleshooting
+        // (error level: without Monolog, Symfony's default logger writes only errors to stderr)
+        if ($cause !== null) {
+            $this->logger->error(sprintf('Mobile-ID authentication failed: %s: %s', $cause::class, $cause->getMessage()));
+        }
+
+        $session->set("error", $error);
+        throw new CustomUserMessageAuthenticationException($error);
     }
 }

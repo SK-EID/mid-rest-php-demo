@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8001:80"
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: "mysql://mid_rest_demo:mid_rest_demo@db:3306/mid_rest_demo?charset=utf8mb4"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: mid_rest_demo
+      MYSQL_USER: mid_rest_demo
+      MYSQL_PASSWORD: mid_rest_demo
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-umid_rest_demo", "-pmid_rest_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db-data:
